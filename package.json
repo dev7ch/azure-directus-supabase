@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "directus": "latest",
+    "directus-extension-flow-manager": "^1.1.1",
     "directus-extension-wpslug-interface": "^1.1.0",
     "pg": "^8.11.3"
   }
