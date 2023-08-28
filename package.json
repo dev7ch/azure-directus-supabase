@@ -1,0 +1,17 @@
+{
+  "name": "docker_directus_azure",
+  "version": "1.0.0",
+  "description": "Directus on Docker",
+  "author": "Silvan Hahn <silvan@akoda.ch>",
+  "scripts": {
+    "start": "npx directus bootstrap && npx directus start"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "directus": "latest",
+    "directus-extension-wpslug-interface": "^1.1.0",
+    "pg": "^8.11.3"
+  }
+}

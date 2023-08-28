@@ -1,0 +1,42 @@
+name: Spin up Azure web app only
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Add branch name for CI/CD of web app
+        required: true
+      resource_group:
+        description: "Name of Azure resource group to spin up"
+        required: true
+        default: 'research'
+      app_plan:
+        description: "Name of Azure app plan"
+        required: true
+        default: 'actions-azure-directus-deployment'
+
+env:
+  AZURE_RESOURCE_GROUP: ${{ github.event.inputs.resource_group }}
+  AZURE_APP_PLAN: ${{ github.event.inputs.app_plan }}
+  AZURE_LOCATION: '"Switzerland North"'
+  AZURE_WEBAPP_NAME: azure-directus-${{ github.event.inputs.branch }}
+
+jobs:
+  setup-up-azure-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Lowercase the github.actor
+        run: echo "actor=${GITHUB_ACTOR,,}" >>${GITHUB_ENV}
+
+      - name: Create webapp resource
+        if: success()
+        run: |
+          az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - name: Configure webapp to use GitHub Packages
+        if: success()
+        run: |
+          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.GITHUB_TOKEN}} --docker-registry-server-url https://ghcr.io --docker-registry-server-user ${{env.actor}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}

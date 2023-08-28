@@ -1,0 +1,35 @@
+name: Destroy Azure app only
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Add branch name of web app to be deleted
+        required: true
+      resource_group:
+        description: "Name of resource group to destroy"
+        required: true
+        default: 'research'
+      sure:
+        description: 'Are you sure to destroy?'
+        required: true
+        type: boolean
+
+env:
+  AZURE_RESOURCE_GROUP: ${{ github.event.inputs.resource_group }}
+  AZURE_WEBAPP_NAME: azure-directus-${{ github.event.inputs.branch }}
+
+jobs:
+  destroy-azure-resources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Destroy Azure environment
+        if: success()
+        run: |
+          az webapp delete --name ${{ AZURE_WEBAPP_NAME }} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --keep-empty-plan --yes

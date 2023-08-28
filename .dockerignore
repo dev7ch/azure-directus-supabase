@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+.secrets.json
+.github
+.git
+.idea
+README.md
+.env.*
