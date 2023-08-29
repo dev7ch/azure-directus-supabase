@@ -39,4 +39,4 @@ jobs:
       - name: Configure webapp to use GitHub Packages
         if: success()
         run: |
-          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.GITHUB_TOKEN}} --docker-registry-server-url https://ghcr.io --docker-registry-server-user ${{env.actor}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.REGISTRY_PASSWORD}} --docker-registry-server-url https://ghcr.io --docker-registry-server-user ${{env.actor}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
