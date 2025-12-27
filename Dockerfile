@@ -31,7 +31,7 @@ ENV NODE_ENV="production"
 
 WORKDIR /directus
 
-COPY --from=production-deps /directus/node_modules /directus/node_modules
+COPY --from=production-deps /directus/node_modules
 
 ADD . .
 
